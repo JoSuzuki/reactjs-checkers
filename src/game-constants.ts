@@ -9,13 +9,13 @@ export enum MovementDirection {
 }
 
 export const PLAYER1: IPlayer = {
-  id: 0,
+  id: 'Red',
   color: '#c92735',
   direction: MovementDirection.Upwards,
 }
 
 export const PLAYER2: IPlayer = {
-  id: 1,
+  id: 'Black',
   color: '#403f3f',  
   direction: MovementDirection.Downwards,
 }

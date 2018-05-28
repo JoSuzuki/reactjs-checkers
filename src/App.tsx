@@ -20,7 +20,9 @@ class App extends React.Component {
   }
 
   public componentDidMount() {
-    console.log(JSON.stringify(this.state.boardMatrix));
+    let boardMatrix = clearHighlights(this.state.boardMatrix);
+    boardMatrix = highlightPlayer(boardMatrix, this.state.turnOwner);
+    this.setState({boardMatrix});
   }
   
   public render() {
@@ -36,7 +38,7 @@ class App extends React.Component {
         <React.Fragment>
           <WinOverlay/>
           <WinBox>
-            <WinTitle>Player {this.state.turnOwner.id} won!</WinTitle>
+            <WinTitle>{this.state.turnOwner.id} won!</WinTitle>
             <Button onClick={this.handlePlayAgain}>Play again <Icon name='undo'/></Button>
           </WinBox>
         </React.Fragment>
@@ -49,7 +51,7 @@ class App extends React.Component {
     const turnOwner = nextTurnOwner(this.state.turnOwner, this.state.players);
     const gameState = GameState.PieceSelect;
     let boardMatrix = clearHighlights(this.state.boardMatrix);
-    boardMatrix = highlightPlayer(boardMatrix, turnOwner);            
+    boardMatrix = highlightPlayer(boardMatrix, turnOwner);
     const canEndTurn = false;
     this.setState({turnOwner, gameState, boardMatrix, canEndTurn});
   }

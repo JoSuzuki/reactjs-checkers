@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
 import { PLAYER1, PLAYER2, NUMBER_OF_ROWS, NUMBER_OF_COLUMNS } from './game-constants';
-import { mountBoardMatrix, constructPiece } from './game-logic';
+import { mountBoardMatrix, constructPiece, clearHighlights, highlightPlayer, highlightPossibleMovement } from './game-logic';
+import { IPiece } from './game-models';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -65,33 +66,33 @@ it('mounts a board', () => {
           {coordinates:{row:4,col:7},selectable:false,king:false}
         ],
         [
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:0},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:0},selectable:false,king:false},
           {coordinates:{row:5,col:1},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:2},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:2},selectable:false,king:false},
           {coordinates:{row:5,col:3},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:4},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:4},selectable:false,king:false},
           {coordinates:{row:5,col:5},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:6},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:5,col:6},selectable:false,king:false},
           {coordinates:{row:5,col:7},selectable:false,king:false}
         ],
         [
           {coordinates:{row:6,col:0},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:1},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:1},selectable:false,king:false},
           {coordinates:{row:6,col:2},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:3},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:3},selectable:false,king:false},
           {coordinates:{row:6,col:4},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:5},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:5},selectable:false,king:false},
           {coordinates:{row:6,col:6},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:7},selectable:true,king:false}
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:6,col:7},selectable:false,king:false}
         ],
         [
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:0},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:0},selectable:false,king:false},
           {coordinates:{row:7,col:1},selectable:false,king:false}
-          ,{owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:2},selectable:true,king:false},
+          ,{owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:2},selectable:false,king:false},
           {coordinates:{row:7,col:3},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:4},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:4},selectable:false,king:false},
           {coordinates:{row:7,col:5},selectable:false,king:false},
-          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:6},selectable:true,king:false},
+          {owner:{id:PLAYER1.id,color:PLAYER1.color,direction:0},coordinates:{row:7,col:6},selectable:false,king:false},
           {coordinates:{row:7,col:7},selectable:false,king:false}
         ]
       ]
@@ -122,4 +123,288 @@ it('constructs pieces', () => {
     king: false});
 });
 
-// it ()
+it ('clear highlights', () => {
+  let boardMatrix: IPiece[][] = [
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: true},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {coordinates:{col: 2,row: 0},king: false,selectable: true},
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {coordinates:{col: 1,row: 1},king: false,selectable: true},
+      {coordinates:{col: 2,row: 1},king: false,selectable: true},
+    ],
+  ];
+  boardMatrix = clearHighlights(boardMatrix);
+  expect(boardMatrix.every(boardRow => boardRow.every(piece => piece.selectable === false))).toBe(true);
+});
+
+it('highlights player', () => {
+  const boardMatrix: IPiece[][] = [
+    [
+      {owner: PLAYER1, coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {owner: PLAYER1, coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 1,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {owner: PLAYER2, coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ];
+  
+  expect(highlightPlayer(boardMatrix, PLAYER2)).toEqual([
+    [
+      {owner: PLAYER1, coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {owner: PLAYER1, coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 1,row: 1},king: false,selectable: true},
+      {owner: PLAYER1, coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 1},king: false,selectable: true},
+      {owner: PLAYER1, coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {owner: PLAYER2, coordinates:{col: 0,row: 2},king: false,selectable: true},
+      {owner: PLAYER2, coordinates:{col: 1,row: 2},king: false,selectable: true},
+      {owner: PLAYER2, coordinates:{col: 2,row: 2},king: false,selectable: true},
+      {owner: PLAYER2, coordinates:{col: 3,row: 2},king: false,selectable: true},
+      {owner: PLAYER2, coordinates:{col: 4,row: 2},king: false,selectable: true}
+    ]
+  ]);
+  expect(highlightPlayer(boardMatrix, PLAYER1)).toEqual([
+    [
+      {owner: PLAYER1, coordinates:{col: 0,row: 0},king: false,selectable: true},
+      {owner: PLAYER1, coordinates:{col: 1,row: 0},king: false,selectable: true},
+      {owner: PLAYER1, coordinates:{col: 2,row: 0},king: false,selectable: true},
+      {owner: PLAYER1, coordinates:{col: 3,row: 0},king: false,selectable: true},
+      {owner: PLAYER1, coordinates:{col: 4,row: 0},king: false,selectable: true}
+    ],
+    [
+      {owner: PLAYER1, coordinates:{col: 0,row: 1},king: false,selectable: true},
+      {owner: PLAYER2, coordinates:{col: 1,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 1},king: false,selectable: true},
+      {owner: PLAYER2, coordinates:{col: 3,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 4,row: 1},king: false,selectable: true}
+    ],
+    [
+      {owner: PLAYER2, coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ]);
+})
+
+it('highlights movement player 1', () => {
+  let boardMatrix: IPiece[][] = [
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 1,row: 1},king: false,selectable: false},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 1},king: false,selectable: false},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ];
+
+  expect(highlightPossibleMovement(boardMatrix, boardMatrix[2][2], false)).toEqual([
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: true},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: true}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 1,row: 1},king: false,selectable: false, killableByMovement: {col:0, row: 0}},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 1},king: false,selectable: false, killableByMovement: {col:4, row: 0}},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ]);
+
+  boardMatrix = [
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {coordinates:{col: 1,row: 1},king: false,selectable: false},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 1},king: false,selectable: false},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ];
+
+  expect(highlightPossibleMovement(boardMatrix, boardMatrix[2][2], false)).toEqual([
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: true}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {coordinates:{col: 1,row: 1},king: false,selectable: true},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 3,row: 1},king: false,selectable: false, killableByMovement: {col:4, row: 0}},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ]);
+});
+
+
+it('highlights movement player 2', () => {
+  let boardMatrix: IPiece[][] = [
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 1,row: 1},king: false,selectable: false},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 3,row: 1},king: false,selectable: false},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ];
+
+  expect(highlightPossibleMovement(boardMatrix, boardMatrix[0][2], false)).toEqual([
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 1,row: 1},king: false,selectable: false, killableByMovement: {col:0, row: 2}},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 3,row: 1},king: false,selectable: false, killableByMovement: {col:4, row: 2}},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: true},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: true}
+    ]
+  ]);
+
+  boardMatrix = [
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {coordinates:{col: 1,row: 1},king: false,selectable: false},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 3,row: 1},king: false,selectable: false, killableByMovement: {col:4, row: 2}},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: false}
+    ]
+  ];
+  expect(highlightPossibleMovement(boardMatrix, boardMatrix[0][2], false)).toEqual([
+    [
+      {coordinates:{col: 0,row: 0},king: false,selectable: false},
+      {coordinates:{col: 1,row: 0},king: false,selectable: false},
+      {owner: PLAYER2, coordinates:{col: 2,row: 0},king: false,selectable: false},
+      {coordinates:{col: 3,row: 0},king: false,selectable: false},
+      {coordinates:{col: 4,row: 0},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 1},king: false,selectable: false},
+      {coordinates:{col: 1,row: 1},king: false,selectable: true},
+      {coordinates:{col: 2,row: 1},king: false,selectable: false},
+      {owner: PLAYER1, coordinates:{col: 3,row: 1},king: false,selectable: false, killableByMovement: {col:4, row: 2}},
+      {coordinates:{col: 4,row: 1},king: false,selectable: false}
+    ],
+    [
+      {coordinates:{col: 0,row: 2},king: false,selectable: false},
+      {coordinates:{col: 1,row: 2},king: false,selectable: false},
+      {coordinates:{col: 2,row: 2},king: false,selectable: false},
+      {coordinates:{col: 3,row: 2},king: false,selectable: false},
+      {coordinates:{col: 4,row: 2},king: false,selectable: true}
+    ]
+  ]);
+});

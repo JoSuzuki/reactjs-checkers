@@ -1,7 +1,7 @@
 import { MovementDirection } from "./game-constants";
 
 export interface IPlayer {
-  id: number;
+  id: string;
   color: string;
   direction: MovementDirection;
 }

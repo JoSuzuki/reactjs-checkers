@@ -1,4 +1,4 @@
-import { MovementDirection, NUMBER_OF_COLUMNS, NUMBER_OF_ROWS, PLAYER1 } from './game-constants';
+import { MovementDirection, NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from './game-constants';
 import { IPiece, IPlayer } from './game-models';
 
 export function checkIfWon(boardMatrix: IPiece[][], players: IPlayer[]) {
@@ -77,20 +77,19 @@ export function highlightPossibleMovement(boardMatrix: IPiece[][], piece: IPiece
 }
 
 export function highlightMovement(boardMatrix: IPiece[][], piece: IPiece, onlyKillable: boolean, upwards: boolean): IPiece[][] {
-  piece.owner = piece.owner ? piece.owner : PLAYER1;
   const nextRow = upwards ? piece.coordinates.row - 1 : piece.coordinates.row + 1;
-  const checkNext = upwards ? nextRow >= 0 : nextRow < NUMBER_OF_ROWS;
+  const checkNext = upwards ? nextRow >= 0 : nextRow < boardMatrix.length;
   const nextNextRow = upwards ? piece.coordinates.row - 2 : piece.coordinates.row + 2;
-  const checkNextNext = upwards ? nextNextRow >= 0 : nextNextRow < NUMBER_OF_ROWS;
+  const checkNextNext = upwards ? nextNextRow >= 0 : nextNextRow < boardMatrix.length;
   const rightCol = piece.coordinates.col + 1;
-  const checkRightNode = rightCol < NUMBER_OF_COLUMNS;
+  const checkRightNode = rightCol < boardMatrix[0].length;
   const rightRightCol = piece.coordinates.col + 2;
-  const checkRightRightNode = rightRightCol < NUMBER_OF_COLUMNS;
+  const checkRightRightNode = rightRightCol < boardMatrix[0].length;
   const leftCol = piece.coordinates.col - 1;
   const checkLeftNode = leftCol >= 0;
   const leftLeftCol = piece.coordinates.col - 2;
   const checkLeftLeftNode = leftLeftCol >= 0;
-  boardMatrix = hilightNextNodes(
+  boardMatrix = highlightNextNodes(
     boardMatrix,
     piece,
     nextRow,
@@ -101,7 +100,7 @@ export function highlightMovement(boardMatrix: IPiece[][], piece: IPiece, onlyKi
     checkNextNext && checkRightRightNode,
     onlyKillable
   );
-  boardMatrix = hilightNextNodes(
+  boardMatrix = highlightNextNodes(
     boardMatrix,
     piece,
     nextRow,
@@ -115,7 +114,7 @@ export function highlightMovement(boardMatrix: IPiece[][], piece: IPiece, onlyKi
   return boardMatrix;
 }
 
-export function hilightNextNodes(
+export function highlightNextNodes(
     boardMatrix: IPiece[][],
     piece: IPiece,
     nextRow: number,
@@ -153,7 +152,7 @@ export function mountBoardMatrix(player1: IPlayer, player2: IPlayer) {
     for (let j = 0; j < NUMBER_OF_COLUMNS; j++) {
       if(i < 3 && ((!isOdd(i) && isOdd(j)) || isOdd(i) && !isOdd(j))) {
         boardRow.push(constructPiece(i, j, player2));
-      } else if (i > 4 && ((!isOdd(i) && isOdd(j)) || isOdd(i) && !isOdd(j))) {
+      } else if (i > NUMBER_OF_ROWS - 4 && ((!isOdd(i) && isOdd(j)) || isOdd(i) && !isOdd(j))) {
         boardRow.push(constructPiece(i, j, player1));
       } else {
         boardRow.push(constructPiece(i, j));
@@ -172,7 +171,7 @@ export function constructPiece(row: number, col: number, player?: IPlayer): IPie
         row,
         col
       },
-      selectable: player.id === PLAYER1.id,
+      selectable: false,
       king: false
     }
   } else {
