@@ -1,0 +1,1 @@
+web: yarn add serve && serve -s build
