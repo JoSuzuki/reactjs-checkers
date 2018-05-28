@@ -1,4 +1,5 @@
 # Reactjs-checkers
+![image](https://user-images.githubusercontent.com/9583920/40598642-610a6a8c-621f-11e8-8701-f637fbb1a921.png)
 
 ## Description
 This is a simple implementation of a local checkers game, if you want to see it running you can do it here [https://reactjs-checkers.herokuapp.com/](https://reactjs-checkers.herokuapp.com/) (it may take a while, since the server in heroku tends to sleep)
@@ -76,15 +77,20 @@ The game has three well defined faces, which can be seen in the `GameState`, Pie
 - Makes Player1 pieces selectable
 
 ### Won
+![image](https://user-images.githubusercontent.com/9583920/40598825-66640f5a-6220-11e8-89a8-1f6544a6f34e.png)
+
 This is the simplest state, the only possible action here is restarting the app.
 
 ### PieceSelect
+![image](https://user-images.githubusercontent.com/9583920/40598642-610a6a8c-621f-11e8-8701-f637fbb1a921.png)
+
 In this state all the player can click the piece which he wants to select. Upon selection
 - It shows the possible movements for that piece via `highlightPossibleMovement`
 - Changes the gamestate to PossibleMovement
 - Changes the currentPiece to the selectedPiece
 
 ### PossibleMovement
+![image](https://user-images.githubusercontent.com/9583920/40598679-92936cc0-621f-11e8-899d-dc1271f32333.png)
 In this state the player can either click one of his pieces or a possible empty space shown in the board.
 Upon selecting one of his pieces:
 - It clears all selectable pieces
@@ -98,6 +104,7 @@ Upon selecting one possible empty space:
 - If the movement killed another piece it can go to one of two paths:
 1. Killed piece -> sees if it can kill more pieces -> if it can -> makes those pieces selectable, if it cant -> end turn
 2. Didnt kill -> end turn 
+
 Upon ending turn:
 - selects next player
 - changes gameState to PieceSelect
