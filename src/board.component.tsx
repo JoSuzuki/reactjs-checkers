@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BoardRow, BoardSquare, Piece, BoardStyled, IconStyled } from './App.style';
+import { BoardRow, BoardSquare, Piece, BoardStyled, IconStyled } from './board.component.style';
 import { IPiece } from './game-models';
 
 interface IBoardProps {

@@ -91,10 +91,10 @@ class App extends React.Component {
           currentPiece = selectedPiece;
         } else {
           boardMatrix = movePiece(boardMatrix, selectedPiece, currentPiece);
-          const killPiece = killPieceFn(boardMatrix, selectedPiece);
-          boardMatrix = killPiece.boardMatrix;
+          const killPieceReturn = killPieceFn(boardMatrix, selectedPiece);
+          boardMatrix = killPieceReturn.boardMatrix;
           boardMatrix = clearHighlights(boardMatrix);
-          if (killPiece.killed) {
+          if (killPieceReturn.killed) {
             if (checkIfWon(boardMatrix, players)) {
               gameState = GameState.Won;
               break;
@@ -105,11 +105,11 @@ class App extends React.Component {
             currentPiece = selectedPiece;
             canEndTurn = true;
           } else {
-            canEndTurn = false;
             turnOwner = nextTurnOwner(turnOwner, players);
             gameState = GameState.PieceSelect;
             boardMatrix = clearHighlights(boardMatrix);
             boardMatrix = highlightPlayer(boardMatrix, turnOwner);
+            canEndTurn = false;
           }
         } 
         break;
