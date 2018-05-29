@@ -2,7 +2,7 @@
 ![image](https://user-images.githubusercontent.com/9583920/40598642-610a6a8c-621f-11e8-8701-f637fbb1a921.png)
 
 ## Description
-This is a simple implementation of a local checkers game, if you want to see it running you can do it here [https://reactjs-checkers.now.sh/](https://reactjs-checkers.now.sh/) (it may take a while, since the server in heroku tends to sleep)
+This is a simple implementation of a local checkers game, if you want to see it running you can do it here [https://reactjs-checkers.now.sh/](https://reactjs-checkers.now.sh/)
 
 ## Structure
 This game has 8 important files
