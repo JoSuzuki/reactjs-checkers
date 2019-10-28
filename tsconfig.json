@@ -21,6 +21,7 @@
     "preserveConstEnums": true,
     "noEmitHelpers": false,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "emitDecoratorMetadata": true
   },
   "exclude": [
